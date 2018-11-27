@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>        
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
+        <link href="tutorialStyle.css" rel="stylesheet" type="text/css" />
+
+        <title>Learn!</title>
+
+    </head>
+    <body onresize="resize()">
+        <div  id="container">
+            <div id="nav">
+                <div id="navIcon" onclick="iconClicked()">
+                    <p style="margin-left: 10px"><i class="fa fa-bars"></i></p>    
+                </div>
+                <div id="navGroup">
+                    <div class="navLink"><a href="index.html">Tutorial Index</a></div>
+                    <div class="navLink"><a href="tester.html">Test Environment</a></div>
+                    <div class="navLink"><a href="log.html">Log</a></div>
+                    <div class="navLink"><a href="../labs.html">Labs</a></div>
+                </div>
+            </div>  
+        </div>
+
+        <div class="pageTitle">
+            <h1>Weather Widget Tutorial</h1> 
+        </div>
+
+
+        <div class="column33">
+            <table style="border: none; text-align: left;">
+                <tr>
+                    <th style="padding-right:30px;">
+                        <h2>Learn about this easy way to show your users the weather</h2>
+                        <p>The weather widget is the right choice if you're new to web dev and want</p>
+                        <ul>
+                            <li>to learn how to use DOM ids</li>
+                            <li>to write minimal JavasSript</li>
+                            <li>to include a feature that uses an API</li>
+                            <li>to get pratice styling an element with CSS</li>
+                        </ul>
+                        <p>Interested?</p>
+                        <ol>
+                            <li> Write a div or span with a id property
+                            <li> Include a link to the JavaScript framework file 
+                            <li> Pass the id to a function in a script tag
+                            <li> Wire the refresh button, also in the script tag 
+                        </ol> 
+                        <br>
+                            <p>Explore the <a href="tester.html">test environment</a> or read the <a href="log.html">the log</a> for a specific breakdown</p>
+                    </th>
+                    <th>
+                        <div id="widgetHere1"></div>
+                        <div id="widgetHere2"></div>
+                    </th>
+
+
+                </tr>
+
+
+            </table>
+
+        </div>
+
+
+
+
+
+
+        <!---------------------------JavaScript--------------------------->
+        <script src='weatherwidget.js'></script>
+        <script src='nav.js'></script>
+        <script>
+                    "use strict";
+
+                    var weatherWidget1 = makeWeatherWidget({domId: "widgetHere1", city: "Philadelphia"});
+                    weatherWidget1.addEventListener("click", function () {
+                        weatherWidget1.refresh();
+                    });
+                    var weatherWidget2 = makeWeatherWidget({domId: "widgetHere2", city: "Seattle"});
+                    weatherWidget2.addEventListener("click", function () {
+                        weatherWidget2.refresh();
+                    });
+
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,81 @@
+body {
+    background-color: #E6F9FC;
+    /* background-color:#C4F0EA; */
+
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size:13px;
+}
+#content {
+    line-height: 1.5em;
+}
+a {
+    font-weight: bold;
+    text-decoration: none;
+}
+ul {
+    margin:0px 0px;
+}
+li {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+pre {
+    margin-bottom:12px;
+    margin-right: 16px;
+    margin-left: 20px;
+    background-color: #EEEEEE;
+    border-radius: 4px;
+    box-shadow: 2px 2px #AAAAAA;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.demo {
+    color:#0000FF;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 0.9em;
+    letter-spacing: 1px;
+}
+
+.highlight {
+    background-color: white; 
+    opacity: 0.7;
+    border-radius: 3px;
+    font-weight: bold;
+    padding: 0px 4px; /* top/bottom then left/right */
+}
+.indent {
+    margin-left: 20px;
+}
+
+.unhide, .unhideNext, .unhideParentNext { /* unhides the next element after it (if the jquery code is in the page) */
+    margin: 2px; 
+    background-color: rgb(232,232,232); 
+    padding: 0px 6px; /* top/bottom then left/right */
+    border-radius: 5px;
+    font-size: 0.8em;
+    border: 1px solid rgb(245,245,245);
+    color:#777777;
+}
+.unhide:hover, .unhideNext:hover, .unhideParentNext:hover {
+    background-color: rgb(245,245,245); 
+}
+li a {
+    font-weight: bold;
+    font-size: 0.95em;
+    letter-spacing: 0.5px;
+    padding: 0px;
+    border-radius: 4px;
+    background-color: rgba(255,255,255,0.3);
+    padding: 0px 4px; /* top/bottom then left/right */
+}
+li a:link {
+    color: #0000CC;
+}
+li a:visited {
+    color: #AA00AA;
+}
+li a:hover{
+    background-color: #FFFFFF;
+}

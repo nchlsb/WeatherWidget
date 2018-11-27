@@ -1,0 +1,185 @@
+/* ------------ Mobile and Common Styles --------------- */
+body { 
+    margin: 0; padding: 0; /* avoid white line just inside browser window */
+    /* set up default text properties - most commonly used */
+    font-family: Tahoma, 'Arial Black', san-serif;
+    font-size: 25px;
+    background-color: #2b61ad;
+    line-height: 1.5em;
+    color: white;
+    width: 100%;
+}
+html, body {
+    margin: 0;  /* remove any default spacing */
+    padding: 0; /* remove any default spacing */
+    min-width: 320px; /* don't want to the page titles to wrap */
+}            
+img {
+    width:300px;
+    border-radius: 5px;
+    margin-top: 10px;
+    box-shadow: -3px 3px 5px #22327e;
+}
+h1 { /* "hero style" page titles */
+    font-size: 3.0em; 
+}
+a {
+    text-decoration:none;
+    font-weight:bold;
+    font-family: serif;
+    font-style: italic;
+}
+
+a:hover {
+    border-bottom: 3px solid #ffc125;
+}
+.sng-page {
+    min-height: 500px; /* fallout for older browsers */
+    min-height: 100vh;
+
+    /* prof K said this needed to be here, but wasn't sure why*/
+    border-bottom: 1px solid rgba(0,0,0,0); 
+    border-top: 1px solid rgba(0,0,0,0); 
+}
+.container {
+    width: 100%;
+    box-sizing: border-box; /* gets rid of horizontal scroll bar, counts padding and border in box size */
+    /* border:thin solid blue; */
+}
+.pageTitle {
+    padding: 10px 15px; /* 1st is top/bottom, 2nd is left/right */
+    background-color: #22327e;
+    color: black;
+    margin-bottom: 20px; /* cover up white space between title and content */
+    font-size: 1.1em;
+    line-height: 2.5em;
+    color:white;
+    text-shadow: -1px 1px 2px black; 
+    border-bottom: 6px solid #ffc130;
+}
+.column33 {
+    font-weight: bold;
+    width: 100%;
+    padding: 15px;
+    color: white;
+    margin: 0px 0%;  /* 1st is top/bottom, 2nd is left/right */
+    box-sizing: border-box; /* gets rid of horizontal scroll bar, counts padding and border in box size */
+}
+
+table {
+    margin:auto;     /* auto makes left and right margins the same, means centered */
+    margin-top: 1em; /* em means size of capital M */
+    border: 5px solid #ffc130;
+    text-align: center;
+}
+
+
+td {
+    font-size:13px;    
+    padding: 0px;
+    margin: 0px;
+}
+
+
+#footer {
+    /*position: fixed;*/
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    background-color: #22327e;
+    color:#CCCCCC;
+    letter-spacing: 0.1ex;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 12px;
+    margin-top: 15px;
+    border-top: 6px solid #ffc130;
+}
+#footer a {
+    text-decoration: none;
+    color:#CCCCCC;
+}
+#footer a:hover {
+    color: white;
+}
+
+#nav {
+    margin-top: 0px; 
+    position:fixed;
+    top:0px;
+    right:0px;
+    padding: 2px;
+    background-color:#22327e;
+    border-bottom: 10px solid #ffc130;
+    border-bottom-left-radius: 5px;
+    border-left: 6px solid #ffc130;
+}
+#nav a, #nav a:hover, #nav a:visited {
+    color: #f4f4f4;
+    font-size:18px;  
+    margin-top:3px;
+} 
+#navGroup {
+    display: none; 
+}
+#navIcon {
+    padding-top: 2px;
+    padding-right: 2px;
+    width:50px;
+    box-sizing: border-box;
+    display: block;
+}
+.navLink {
+    color: #f4f4f4;
+    font-size:18px;  
+    margin-top:3px;
+    padding-left: 5px;
+    padding-right: 7px;
+}
+.structureInfo{
+    margin-bottom:50px;
+    padding-bottom: 50px;
+    border-bottom: 6px solid #ffc130;
+    font-weight: bold;
+    
+}
+/* ------------ Desktop --------------- */
+@media screen and (min-width: 600px) {
+
+    .container {
+        padding: 0px 15px;
+    }
+
+    .column33 {
+        padding: 5px 15px; 
+        width: 80%;
+        box-sizing:border-box;
+        margin: 0px 0.5%; 
+        margin-left: auto;
+        margin-right: auto;
+    }   
+    .clear {
+        clear:both;
+    }
+    .navLink{
+        display:inline;
+        border:none;           
+    }
+    #navGroup {
+        display:block;
+        padding-top: 10px;
+        padding-bottom: 5x;
+        padding-right: 10px;
+        padding-left: 10px;
+
+    }
+    #navIcon {
+        display:none;
+    }
+    .structureInfo{
+        margin-bottom:50px;
+        padding-bottom: 50px;
+        font-weight: bold;
+    }
+}

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>        
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
+        <link href="tutorialStyle.css" rel="stylesheet" type="text/css" />
+
+        <title>Test Environment</title>
+
+    </head>
+    <body onresize="resize()">
+        <div  id="container">
+            <div id="nav">
+                <div id="navIcon" onclick="iconClicked()">
+                    <p style="margin-left: 10px"><i class="fa fa-bars"></i></p>    
+                </div>
+                <div id="navGroup">
+                    <div class="navLink"><a href="index.html">Tutorial Index</a></div>
+                    <div class="navLink"><a href="tester.html">Test Environment</a></div>
+                    <div class="navLink"><a href="log.html">Log</a></div>
+                    <div class="navLink"><a href="../labs.html">Labs</a></div>
+                </div>
+            </div>  
+        </div>
+
+        <div class="pageTitle">
+            <h1>Test Environment</h1> 
+        </div>
+
+        <div class="column33">
+            <p> Welcome.
+            <ul>
+                <li>Refreshing prints a new message to the log.</li>           
+                <li>Also note the log messages saying the widgets were created. </li>
+                <li>The refresh() method is public, so a user can call it from the console using a given variable name. </li>   
+            </ul>
+        </div>
+
+        <div id="widgetHere1"></div>
+        <div id="widgetHere2"></div>
+
+
+        <footer id="footer">
+            Nick Brady
+        </footer>
+
+        <!---------------------------JavaScript--------------------------->
+        <script src='weatherwidget.js'></script>
+        <script src='nav.js'></script>
+        <script>
+                    "use strict";
+
+                    var weatherWidget1 = makeWeatherWidget({domId: "widgetHere1", city: "Philadelphia"});
+                    weatherWidget1.addEventListener("click", function () {
+                        weatherWidget1.refresh();
+                    });
+                    var weatherWidget2 = makeWeatherWidget({domId: "widgetHere2", city: "Seattle"});
+                    weatherWidget2.addEventListener("click", function () {
+                        weatherWidget2.refresh();
+                    });
+
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>        
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
+        <link href="logstyle.css" rel="stylesheet" type="text/css" />
+
+        <title>Log</title>
+
+    </head>
+    <body onresize="resize()">
+        <div  id="container">
+            <div id="nav">
+                <div id="navIcon" onclick="iconClicked()">
+                    <p style="margin-left: 10px"><i class="fa fa-bars"></i></p>    
+                </div>
+                <div id="navGroup">
+                    <div class="navLink"><a href="index.html">Tutorial Index</a></div>
+                    <div class="navLink"><a href="tester.html">Test Environment</a></div>
+                    <div class="navLink"><a href="log.html">Log</a></div>
+                    <div class="navLink"><a href="../labs.html">Labs</a></div>
+                </div>
+            </div>  
+        </div>
+
+        <div class="pageTitle">
+            <h1>Log  & Notes</h1> 
+        </div>
+
+
+        <div class="column33">
+            <h2>The idea</h2>           
+            <p>
+                I wanted my framework to be a tool that told a short story about moving information. My code creates a weather widget
+                that is populated with data for a given city via the OpenWeatherMap API. An instance of the widget can then be refreshed 
+                at the user's discretion. Therefore, my JavaScript needs not only to fetch data, but also create dynamic 
+                HTML , which is a table in this case, to display it to the user.              
+            </p>
+
+            <h2>makeWeatherWidget()</h2>            
+            <p>
+                The entire widget is created by a single function, makeWeatherWidget(domIdAndCity) with domIdAndCity being JSON.
+                I knew I would have to write the code that made my widget, then append the HTML to a given DOM Id and also return the widget
+                in order for the event listener wiring (read on for more info on that) to work.    
+            </p>
+
+            <pre>
+
+function makeWeatherWidget(domIdAndCity)
+{
+    // TBD
+
+    document.getElementById(domIdAndCity.domId).appendChild(weatherWidget);
+    return weatherWidget;
+}
+            </pre>
+
+            <h2>Creating varibles</h2>            
+            <p>
+                The variables are the first code in the widget. They are the dynamic space in the form of an HTML table for the data. They are
+                variables so that they can be accessed later during a refresh.
+            </p>
+
+            <pre>
+
+
+    /*Creats an instance to be appened to the dom at param domId*/
+    var weatherWidget = document.createElement("table");
+
+    /*Creats the table into which data is placed*/
+    var rowLocationAndTime = weatherWidget.insertRow();
+    var locationAndTime = rowLocationAndTime.insertCell(); //data is added during fresh or when created
+    var btnRefresh = rowLocationAndTime.insertCell().innerHTML = '&lt;  button>&lt;i class="fa fa-redo">&lt;/i>&lt;/button>';
+
+    var rowTemperature = weatherWidget.insertRow();
+    rowTemperature.insertCell().innerHTML = '&lt;i class="fas fa-thermometer-half">&lt;/i> Temp: ';
+    var temperature = rowTemperature.insertCell();
+
+    var rowDescription = weatherWidget.insertRow();
+    rowDescription.insertCell().innerHTML = '&lt;i class="fa fa-cloud">&lt;/i> Description: ';
+    var description = rowDescription.insertCell();
+
+    var rowHumidity = weatherWidget.insertRow();
+    rowHumidity.insertCell().innerHTML = '&lt;i class="fa fa-tint">&lt;/i> Humidity: ';
+    var humidity = rowHumidity.insertCell();
+
+    var rowWind = weatherWidget.insertRow();
+    rowWind.insertCell().innerHTML = '&lt;i class="fa fa-wind">&lt; /i> Wind Speed: ';
+    var wind = rowWind.insertCell();
+            </pre>
+
+            <h2>getWeatherData</h2>            
+            <p>
+                The key to this JavaScript was a private function that makes a GET call to the OpenWeatherMap API. Although this 
+                could have been done in jQuery, I used JavaScript to show I could understand what jQuery was doing. Note this 
+                function has another function inside of it. The inner function sets up what happens with the API call. For instance, 
+                it makes an alert if something goes wrong. The "if (xmlhttp.status === 200)" was also useful for debugging. I wrote 
+                plane text to the page a few times during the first iterations of this code before it become more advanced.<br>
+                Underneath the inner function is where the API call actually happens. Note that is given the city and my API key
+                as its first argument. Unfortunately, I could not get AJAX to work with this. The second argument, false, makes the syncrancous, not asynocus code. I would love to improve upon 
+                this next time I use an API. However, it does work without AJAX,and the last line parses the response text of the 
+                request to JSON for use by the refresh function.                 
+            </p>
+
+            <pre>
+
+
+    getWeatherData = function (city) {
+
+        var xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState === XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+                if (xmlhttp.status === 200) {
+                    //use for debugging
+                    //document.getElementById("rawData").innerHTML = xmlhttp.responseText;
+                } else if (xmlhttp.status === 400) {
+                    alert('There was an error 400 getting your weather data for '); //add city name
+                } else {
+                    alert('something else other than 200 was returned'); //change this line later
+                }
+            }
+        };  
+
+        xmlhttp.open("GET", "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=3281a94a3ece29f94a82d4c8b931e0a2", false); //had to set AJAX to false to parse JSON. unsure why
+        xmlhttp.send();
+        return JSON.parse(xmlhttp.responseText);
+    };
+            </pre>
+
+            <h2>weatherWidget.refresh</h2>            
+            <p>
+                The refresh function is public in order to be wired to the refresh button later. It takes a city's name from  the
+                argument of makeWeatherWidget and passes it to private method getWeatherData(), which return JSON. That data then
+                gets manipulated to adjust for units, and then is placed into the variables that point to relevant the table cells. 
+                This is called the first time the table is created. Without it, the table would be blank. Read about that next.                 
+            </p>
+
+            <pre>
+
+
+ weatherWidget.refresh = function () {
+
+        data = getWeatherData(domIdAndCity.city);
+
+        var kelvin = data.main.temp;
+        temperature.innerHTML = ((9 / 5) * (kelvin - 273) + 32).toFixed(1);
+        humidity.innerHTML = data.main.humidity;
+        wind.innerHTML = data.wind.speed;
+        description.innerHTML = ""; //must remove old data in field because of how loop concatenates 
+        for (i = 0; i < data.weather.length; i++) {
+            description.innerHTML += data.weather[i].description;
+            if (i < data.weather.length - 1) {
+                description.innerHTML += ", ";
+            }
+        }
+
+        var today = new Date(); // so js has new and objects like I'm used to?
+        var hours = today.getHours();
+        var meridiem = " am"; //in your current time zone
+        if (hours > 12) {
+            hours -= 12;
+            meridiem = " pm";
+        }
+        var minutes = today.getMinutes();
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
+
+        locationAndTime.innerHTML = '&lti class="fas fa-city">&lt/i> ' + domIdAndCity.city + ', ' +
+                hours + ":" + minutes + meridiem;
+        
+        //Without if statement, user would see this message in addtion to the creation message upon instantiation because of refresh() in IFFE 
+        if (firstLogMessageWasSent) {
+            console.log(domIdAndCity.city + " wather resfreshed");
+        }
+
+    };
+            </pre>
+
+            <h2>Setting up for instanction with an IFFE</h2>            
+            <p>
+                The code in this IFFE is makes sure data is in the table the first time the user sees it. Without calling 
+                weatherWidget.refresh();, the user would see a blank table until they refreshed. This IFFE also helps with log 
+                messages. The first time a widget is created, the message read differently than subsequent refreshes. Recall the 
+                last code block has a "if (firstLogMessageWasSent)" above. Although this was not necessary, it was a touch I wanted
+                for my imaginary user. 
+            </p>
+
+            <pre>
+var firstLogMessageWasSent = false;
+
+(function () {
+    weatherWidget.refresh();
+    console.log(domIdAndCity.city + " weather widget was created.");
+    firstLogMessageWasSent = true;
+    })();
+            </pre>
+
+            <h2>In the HTML: Event Wiring and Icons</h2>            
+            <p>
+               I used font-awsome icons, so please set up your HTML such that it includes a link to those icons in the head. Because
+               dependency injection is important, I wrote my code such that the person writing the HTML must include someplace in the
+               DOM for the widget to go, then pace that DOM Id to the widget. Then, that person would include a script link to the 
+               weatherwidget.js, and create an instance(s) of the widget in the script tag, passing DOM Id(s) and city/cties in JSON.
+               I struggled to make multiple widgets refresh ultimately, until I ultimately chose to write the widgets to event listeners.
+            </p>
+
+            <pre>
+&lthead>
+    &ltlink rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
+&lt/head>
+
+&ltbody>
+    &ltdiv id="widgetHere">&lt/div>
+&lt/body>
+
+&ltscript src='weatherwidget.js'>&lt/script>
+
+&ltscript>
+    var weatherWidget = makeWeatherWidget({domId: "widgetHere", city: "Philadelphia"});
+    weatherWidget.addEventListener("click", function () {
+        weatherWidget.refresh();
+    });
+&lt/script>
+            </pre>
+
+            <h2>Back to JavaScript: the Final Product</h2>            
+            <p>
+                Here is the source code so you can visualize how it comes together. 
+                I hope you enjoyed this story about data and information. 
+            </p>
+
+            <pre>
+function makeWeatherWidget(domIdAndCity)
+{
+    /*Creats an instance to be appened to the dom at param domId*/
+    var weatherWidget = document.createElement("table");
+
+    /*Creats the table into which data is placed*/
+    var rowLocationAndTime = weatherWidget.insertRow();
+    var locationAndTime = rowLocationAndTime.insertCell(); //data is added during fresh or when created
+    var btnRefresh = rowLocationAndTime.insertCell().innerHTML = '&ltbutton>&lti class="fa fa-redo">&lt/i>&lt/button>';
+
+    var rowTemperature = weatherWidget.insertRow();
+    rowTemperature.insertCell().innerHTML = '&lti class="fas fa-thermometer-half">&lt/i> Temp: ';
+    var temperature = rowTemperature.insertCell();
+
+    var rowDescription = weatherWidget.insertRow();
+    rowDescription.insertCell().innerHTML = '&lti class="fa fa-cloud">&lt/i> Description: ';
+    var description = rowDescription.insertCell();
+
+    var rowHumidity = weatherWidget.insertRow();
+    rowHumidity.insertCell().innerHTML = '&lti class="fa fa-tint">&lt/i> Humidity: ';
+    var humidity = rowHumidity.insertCell();
+
+    var rowWind = weatherWidget.insertRow();
+    rowWind.insertCell().innerHTML = '&lti class="fa fa-wind">&lt/i> Wind Speed: ';
+    var wind = rowWind.insertCell();
+
+    /*This functions make the API call with the OpenWather API
+     * Although the call could be done with jQuery, this widget just uses javascript to demo what's happening "behind" the jQuery
+     * Read more at https://stackoverflow.com/questions/8567114/how-to-make-an-ajax-call-without-jquery
+     */
+    getWeatherData = function (city) {
+
+        var xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState === XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+                if (xmlhttp.status === 200) {
+                    //use for debugging
+                    //document.getElementById("rawData").innerHTML = xmlhttp.responseText;
+                } else if (xmlhttp.status === 400) {
+                    alert('There was an error 400 getting your weather data for '); //add city name
+                } else {
+                    alert('something else other than 200 was returned'); //change this line later
+                }
+            }
+        };
+
+        //this is a GET call because we are taking data from the API, not giving it the API
+        //use of the open weather API requires a key, see below         //make key var?
+        xmlhttp.open("GET", "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=3281a94a3ece29f94a82d4c8b931e0a2", false); //had to set AJAX to false to parse JSON. unsure why
+        xmlhttp.send();
+        return JSON.parse(xmlhttp.responseText);
+    };
+    
+    /*
+     * Fires when refresh button is clicked. Calls getWeatherData() to update widget. 
+     */
+    weatherWidget.refresh = function () {
+
+        data = getWeatherData(domIdAndCity.city);
+
+        var kelvin = data.main.temp;
+        temperature.innerHTML = ((9 / 5) * (kelvin - 273) + 32).toFixed(1);
+        humidity.innerHTML = data.main.humidity;
+        wind.innerHTML = data.wind.speed;
+        description.innerHTML = ""; //must remove old data in field because of how loop concatenates 
+        for (i = 0; i < data.weather.length; i++) {
+            description.innerHTML += data.weather[i].description;
+            if (i < data.weather.length - 1) {
+                description.innerHTML += ", ";
+            }
+        }
+
+        var today = new Date(); // so js has new and objects like I'm used to?
+        var hours = today.getHours();
+        var meridiem = " am"; //in your current time zone
+        if (hours > 12) {
+            hours -= 12;
+            meridiem = " pm";
+        }
+        var minutes = today.getMinutes();
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
+
+        locationAndTime.innerHTML = '&lti class="fas fa-city">&lt/i> ' + domIdAndCity.city + ', ' +
+                hours + ":" + minutes + meridiem;
+        
+        //Without if statement, user would see this message in addtion to the creation message upon instantiation because of refresh() in IFFE 
+        if (firstLogMessageWasSent) {
+            console.log(domIdAndCity.city + " wather resfreshed");
+        }
+
+    };
+
+    /*
+     * IFFE: calls refresh() to dispaly data, and also leaves a message in the log saying the widget for a given location was created.
+     */
+    var firstLogMessageWasSent = false;
+
+    (function () {
+        weatherWidget.refresh();
+        console.log(domIdAndCity.city + " weather widget was created.");
+        firstLogMessageWasSent = true;
+    })();
+
+    /*
+     * I used both the appendChild() and return so that the widget appeared on the page, but was also accessible to events. 
+     * Note for future: is this possible with just a return statment? 
+     */
+    
+    document.getElementById(domIdAndCity.domId).appendChild(weatherWidget);
+    return weatherWidget;
+} // end of makeStructurelist
+            </pre>
+
+
+
+
+            <!---------------------------JavaScript--------------------------->
+            <script src='weatherwidget.js'></script>
+            <script src='nav.js'></script>
+            <script>
+                        "use strict";
+
+                        var weatherWidget1 = makeWeatherWidget({domId: "widgetHere1", city: "Philadelphia"});
+                        weatherWidget1.addEventListener("click", function () {
+                            weatherWidget1.refresh();
+                        });
+                        var weatherWidget2 = makeWeatherWidget({domId: "widgetHere2", city: "Seattle"});
+                        weatherWidget2.addEventListener("click", function () {
+                            weatherWidget2.refresh();
+                        });
+
+
+            </script>
+    </body>
+</html>
